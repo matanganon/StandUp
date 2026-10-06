@@ -25,13 +25,26 @@ permissions:
 
 jobs:
   release:
-    runs-on: macos-15
+    runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode.app
+      - name: Verify toolchain (Xcode 16+ / macOS 15 SDK)
+        run: |
+          # Use the runner's default Xcode — do NOT force a specific path.
+          echo "Active developer dir: $(xcode-select -p)"
+          xcodebuild -version
+          SDK_VER="$(xcrun --sdk macosx --show-sdk-version)"
+          echo "macOS SDK version: $SDK_VER"
+          # The project targets macOS 15. Fail early with a clear message if the
+          # runner's default SDK is older than 15, so the failure is obvious.
+          MAJOR="${SDK_VER%%.*}"
+          if [ "$MAJOR" -lt 15 ]; then
+            echo "::error::macOS SDK $SDK_VER is older than 15.0 required by StandUp." >&2
+            echo "Pin a newer runner image or select a newer Xcode." >&2
+            exit 1
+          fi
 
       - name: Derive version from tag
         id: ver
