@@ -49,6 +49,27 @@ xcodebuild -project StandUp.xcodeproj -scheme StandUp test \
 
 ## How to Run
 
+### Install via Homebrew (recommended)
+
+```bash
+brew tap matanganon/standup
+brew install --cask standup
+```
+
+This places `StandUp.app` in `/Applications`. Launch it from there or Spotlight.
+
+### Manual install
+
+1. Download the latest `StandUp-x.x.x.zip` from [GitHub Releases](https://github.com/matanganon/StandUp/releases).
+2. Unzip and move `StandUp.app` to `/Applications`.
+3. If you get a Gatekeeper warning (unsigned build), run once:
+   ```bash
+   xattr -dr com.apple.quarantine /Applications/StandUp.app
+   ```
+4. Open StandUp from Applications.
+
+### Build from source
+
 1. Build the project (see above).
 2. Locate `StandUp.app` in Xcode's derived data or the build products directory.
 3. Double-click `StandUp.app` or launch from the terminal:
