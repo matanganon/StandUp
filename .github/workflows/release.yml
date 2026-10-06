@@ -111,3 +111,37 @@ jobs:
               brew install --cask standup
 
           SHA-256: \`$SHA\`" || gh release upload "$GITHUB_REF_NAME" "$ZIP" --clobber
+
+      # Update the Homebrew tap (matanganon/homebrew-standup) so `brew install`
+      # always matches the just-published release. Requires a repo secret
+      # HOMEBREW_TAP_TOKEN: a PAT (fine-grained, Contents: Read and write) that
+      # can push to matanganon/homebrew-standup. If the secret is absent, this
+      # step is skipped so unsigned/dev tag pushes don't fail the workflow.
+      - name: Update Homebrew tap
+        if: ${{ env.HOMEBREW_TAP_TOKEN != '' }}
+        env:
+          HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+        run: |
+          set -euo pipefail
+          VERSION="${{ steps.ver.outputs.version }}"
+          ZIP="dist/StandUp-$VERSION.zip"
+          SHA="$(shasum -a 256 "$ZIP" | awk '{print $1}')"
+
+          TAP_DIR="$RUNNER_TEMP/homebrew-standup"
+          git clone "https://x-access-token:${HOMEBREW_TAP_TOKEN}@github.com/matanganon/homebrew-standup.git" "$TAP_DIR"
+
+          CASK="$TAP_DIR/Casks/standup.rb"
+          /usr/bin/sed -i '' -E "s/^(  version )\"[^\"]*\"/\1\"$VERSION\"/" "$CASK"
+          /usr/bin/sed -i '' -E "s/^(  sha256 )\"[^\"]*\"/\1\"$SHA\"/" "$CASK"
+
+          cd "$TAP_DIR"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet; then
+            echo "Cask already up to date for $VERSION; nothing to push."
+          else
+            git add Casks/standup.rb
+            git commit -m "standup $VERSION"
+            git push
+            echo "Pushed cask update: standup $VERSION ($SHA)"
+          fi
