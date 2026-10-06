@@ -2,6 +2,10 @@
 
 A lightweight native macOS menu bar utility that reminds you to take a short break after approximately 30 minutes of active computer work. It tracks *actual usage* — not wall-clock time — and automatically becomes quiet when you're in a video or voice call.
 
+<p align="center">
+  <img src="docs/images/screenshot.png" alt="StandUp logo" width="200">
+</p>
+
 ## What StandUp Does
 
 - Lives in the macOS menu bar with a live countdown showing remaining work time.
