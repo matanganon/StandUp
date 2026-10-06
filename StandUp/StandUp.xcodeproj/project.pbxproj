@@ -1,0 +1,396 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A1000011 /* StandUpCore in Frameworks */ = {isa = PBXBuildFile; productRef = A1000010 /* StandUpCore */; };
+		A1000031 /* StandUpCore in Frameworks */ = {isa = PBXBuildFile; productRef = A1000030 /* StandUpCore */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A1000001 /* StandUp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StandUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1000002 /* StandUpTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StandUpTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1000050 /* StandUpCore */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = StandUpCore; path = ../StandUpCore; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		A1000022 /* Exceptions */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+				StandUp.entitlements,
+			);
+			target = A1000005 /* StandUp */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		A1000020 /* StandUp */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (A1000022 /* Exceptions */, ); explicitFileTypes = {}; explicitFolders = (); path = StandUp; sourceTree = "<group>"; };
+		A1000021 /* StandUpTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = StandUpTests; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A1000003 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000011 /* StandUpCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1000004 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000031 /* StandUpCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A1000000 = {
+			isa = PBXGroup;
+			children = (
+				A1000020 /* StandUp */,
+				A1000021 /* StandUpTests */,
+				A1000050 /* StandUpCore */,
+				A100000F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A100000F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A1000001 /* StandUp.app */,
+				A1000002 /* StandUpTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A1000005 /* StandUp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1000012 /* Build configuration list for PBXNativeTarget "StandUp" */;
+			buildPhases = (
+				A1000006 /* Sources */,
+				A1000003 /* Frameworks */,
+				A1000007 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A1000020 /* StandUp */,
+			);
+			name = StandUp;
+			packageProductDependencies = (
+				A1000010 /* StandUpCore */,
+			);
+			productName = StandUp;
+			productReference = A1000001 /* StandUp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A1000008 /* StandUpTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1000015 /* Build configuration list for PBXNativeTarget "StandUpTests" */;
+			buildPhases = (
+				A1000009 /* Sources */,
+				A1000004 /* Frameworks */,
+				A100000A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A100000E /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A1000021 /* StandUpTests */,
+			);
+			name = StandUpTests;
+			packageProductDependencies = (
+				A1000030 /* StandUpCore */,
+			);
+			productName = StandUpTests;
+			productReference = A1000002 /* StandUpTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A100000B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2700;
+				LastUpgradeCheck = 2700;
+				TargetAttributes = {
+					A1000005 = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					A1000008 = {
+						CreatedOnToolsVersion = 27.0;
+						TestTargetID = A1000005;
+					};
+				};
+			};
+			buildConfigurationList = A100000C /* Build configuration list for PBXProject "StandUp" */;
+			compatibilityVersion = "Xcode 16.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A1000000;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A1000040 /* XCLocalSwiftPackageReference "../StandUpCore" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = A100000F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A1000005 /* StandUp */,
+				A1000008 /* StandUpTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A1000007 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A100000A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A1000006 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1000009 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A100000E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A1000005 /* StandUp */;
+			targetProxy = A100000D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXContainerItemProxy section */
+		A100000D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A100000B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A1000005;
+			remoteInfo = StandUp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin XCBuildConfiguration section */
+		A1000016 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		A1000017 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		A1000018 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = StandUp/StandUp.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = StandUp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.standup.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		A1000019 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = StandUp/StandUp.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = StandUp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.standup.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		A100001A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.standup.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/StandUp.app/Contents/MacOS/StandUp";
+			};
+			name = Debug;
+		};
+		A100001B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.standup.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/StandUp.app/Contents/MacOS/StandUp";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A100000C /* Build configuration list for PBXProject "StandUp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1000016 /* Debug */,
+				A1000017 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1000012 /* Build configuration list for PBXNativeTarget "StandUp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1000018 /* Debug */,
+				A1000019 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1000015 /* Build configuration list for PBXNativeTarget "StandUpTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A100001A /* Debug */,
+				A100001B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		A1000040 /* XCLocalSwiftPackageReference "../StandUpCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../StandUpCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A1000010 /* StandUpCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StandUpCore;
+		};
+		A1000030 /* StandUpCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StandUpCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = A100000B /* Project object */;
+}

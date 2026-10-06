@@ -1,0 +1,35 @@
+# macOS
+.DS_Store
+
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+*.xcscmblueprint
+xcuserdata/
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved
+
+# Code coverage / profiling
+*.profraw
+default.profraw
+
+# Release artifacts (built locally)
+dist/
+.release-build/
+*.zip
+
+# Credentials — never commit
+*.p12
+*.cer
+*.provisionprofile
+.env
+notarization.env
