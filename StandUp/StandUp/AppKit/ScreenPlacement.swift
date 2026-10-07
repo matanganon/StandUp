@@ -22,6 +22,12 @@ enum ScreenPlacement {
         return screen.frame
     }
 
+    /// Visible frame leaves the menu bar available, which lets a preview be
+    /// toggled off from the menu-bar popover without weakening real reminders.
+    static func activeScreenVisibleFrame() -> NSRect {
+        activeScreen()?.visibleFrame ?? NSRect(x: 0, y: 0, width: 1440, height: 860)
+    }
+
     /// Top-center placement, ~24pt below the visible top of the active screen.
     static func topCenterRect(size: NSSize, topInset: CGFloat = 24) -> NSRect {
         guard let screen = activeScreen() else {

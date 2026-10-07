@@ -16,7 +16,10 @@ final class ReminderPresenter: ReminderPresenting {
 
     /// Current work interval (minutes) and snooze availability, kept up to date by the app.
     var workMinutes: Int = 30
+    var breakMinutes: Int = 2
+    var snoozeMinutes: Int = 5
     var canSnooze: Bool = true
+    private var isPreviewActive = false
 
     nonisolated func present(_ presentation: ReminderPresentation) {
         // The protocol is nonisolated; hop to the main actor for UI work.
@@ -24,6 +27,10 @@ final class ReminderPresenter: ReminderPresenting {
     }
 
     private func apply(_ presentation: ReminderPresentation) {
+        // The coordinator keeps ticking while preview is open. Ignore those normal
+        // presentation updates so `.none` cannot dismiss the preview a second later.
+        guard !isPreviewActive else { return }
+
         switch presentation {
         case .none:
             breakController.close()
@@ -38,7 +45,10 @@ final class ReminderPresenter: ReminderPresenting {
             meetingController.close()
             breakController.show(
                 workMinutes: workMinutes,
+                breakMinutes: breakMinutes,
+                snoozeMinutes: snoozeMinutes,
                 canSnooze: canSnooze,
+                isPreview: false,
                 actions: .init(
                     startBreak: { [weak self] in self?.startBreak() },
                     snooze: { [weak self] in self?.snooze() },
@@ -54,22 +64,37 @@ final class ReminderPresenter: ReminderPresenting {
     }
 
     func closeAll() {
+        isPreviewActive = false
         breakController.close()
         meetingController.close()
     }
 
-    /// Show the aggressive reminder as a preview (no sound, no state change).
-    /// The panel's actions dismiss the preview instead of affecting the coordinator.
+    /// Show a sticky aggressive reminder preview (no sound or state change).
+    /// Calling it again toggles the preview off.
     func showPreview() {
+        if isPreviewActive {
+            finishPreview()
+            return
+        }
+
+        isPreviewActive = true
         meetingController.close()
         breakController.show(
             workMinutes: workMinutes,
+            breakMinutes: breakMinutes,
+            snoozeMinutes: snoozeMinutes,
             canSnooze: canSnooze,
+            isPreview: true,
             actions: .init(
-                startBreak: { [weak self] in self?.breakController.close() },
-                snooze: { [weak self] in self?.breakController.close() },
-                skip: { [weak self] in self?.breakController.close() }
+                startBreak: { [weak self] in self?.finishPreview() },
+                snooze: {},
+                skip: { [weak self] in self?.finishPreview() }
             )
         )
+    }
+
+    private func finishPreview() {
+        isPreviewActive = false
+        breakController.close()
     }
 }

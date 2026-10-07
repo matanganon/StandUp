@@ -247,4 +247,154 @@ final class BreakCoordinatorTests: XCTestCase {
         XCTAssertEqual(rig.coordinator.state, .working)
         XCTAssertGreaterThan(rig.coordinator.remainingWork, 29 * 60)
     }
+
+    // MARK: - Settings behavior coverage
+
+    func testWorkIntervalAndWarningThresholdSettings() {
+        var settings = AppSettings.standard
+        settings.workInterval = 10
+        settings.warningThreshold = 3
+        settings.naturalBreakThreshold = 100
+        let rig = makeRig(settings)
+
+        run(rig, seconds: 7)
+        XCTAssertEqual(rig.coordinator.state, .warning)
+        XCTAssertEqual(rig.coordinator.remainingWork, 3, accuracy: 0.01)
+
+        run(rig, seconds: 3)
+        XCTAssertEqual(rig.coordinator.state, .due)
+    }
+
+    func testCustomBreakAndSnoozeDurationsAndLimit() {
+        var settings = AppSettings.standard
+        settings.workInterval = 2
+        settings.breakDuration = 4
+        settings.snoozeDuration = 3
+        settings.maxSnoozes = 1
+        settings.naturalBreakThreshold = 100
+        let rig = makeRig(settings)
+
+        run(rig, seconds: 2)
+        rig.coordinator.snooze()
+        guard case .snoozed = rig.coordinator.state else {
+            return XCTFail("expected custom snooze")
+        }
+        run(rig, seconds: 3)
+        XCTAssertEqual(rig.coordinator.state, .due)
+        XCTAssertFalse(rig.coordinator.canSnooze)
+
+        rig.coordinator.startBreak()
+        run(rig, seconds: 3)
+        guard case .breakInProgress = rig.coordinator.state else {
+            return XCTFail("expected custom break to still be running")
+        }
+        run(rig, seconds: 1)
+        XCTAssertEqual(rig.coordinator.state, .working)
+        XCTAssertEqual(rig.coordinator.stats.completedBreaks, 1)
+    }
+
+    func testAutoCompleteCanBeDisabled() {
+        var settings = AppSettings.standard
+        settings.workInterval = 2
+        settings.breakDuration = 3
+        settings.autoCompleteOnInactivity = false
+        settings.naturalBreakThreshold = 100
+        let rig = makeRig(settings)
+
+        run(rig, seconds: 2)
+        rig.activity.idleDuration = 20
+        run(rig, seconds: 10)
+        XCTAssertEqual(rig.coordinator.state, .due)
+        XCTAssertEqual(rig.coordinator.stats.completedBreaks, 0)
+    }
+
+    func testSoundCanBeDisabled() {
+        var settings = AppSettings.standard
+        settings.workInterval = 2
+        settings.soundEnabled = false
+        settings.naturalBreakThreshold = 100
+        let rig = makeRig(settings)
+
+        run(rig, seconds: 65)
+        let soundIndices = rig.presenter.presentations.compactMap { presentation -> Int? in
+            guard case .aggressive(let index) = presentation else { return nil }
+            return index
+        }
+        XCTAssertTrue(soundIndices.isEmpty)
+        XCTAssertTrue(rig.presenter.presentations.contains(.aggressive(soundAlertIndex: nil)))
+    }
+
+    func testAutomaticMeetingDetectionCanBeDisabled() {
+        var settings = AppSettings.standard
+        settings.workInterval = 2
+        settings.automaticMeetingDetection = false
+        settings.naturalBreakThreshold = 100
+        let rig = makeRig(settings)
+        rig.meeting.state = .likelyMeeting(appBundleIdentifier: "us.zoom.xos")
+
+        run(rig, seconds: 2)
+        XCTAssertEqual(rig.coordinator.state, .due)
+        XCTAssertTrue(rig.presenter.presentations.contains {
+            if case .aggressive = $0 { return true }
+            return false
+        })
+    }
+
+    func testQuietMeetingRemindersCanBeDisabled() {
+        var settings = AppSettings.standard
+        settings.workInterval = 2
+        settings.quietMeetingReminders = false
+        settings.naturalBreakThreshold = 100
+        let rig = makeRig(settings)
+        rig.meeting.state = .likelyMeeting(appBundleIdentifier: "us.zoom.xos")
+
+        run(rig, seconds: 2)
+        XCTAssertEqual(rig.coordinator.state, .deferredForMeeting)
+        XCTAssertFalse(rig.presenter.presentations.contains {
+            if case .quietMeeting = $0 { return true }
+            return false
+        })
+    }
+
+    func testAggressiveReminderAfterMeetingCanBeDisabled() {
+        var settings = AppSettings.standard
+        settings.workInterval = 2
+        settings.aggressiveReminderAfterMeeting = false
+        settings.naturalBreakThreshold = 100
+        let rig = makeRig(settings)
+        rig.meeting.state = .likelyMeeting(appBundleIdentifier: "us.zoom.xos")
+
+        run(rig, seconds: 2)
+        XCTAssertEqual(rig.coordinator.state, .deferredForMeeting)
+        rig.presenter.reset()
+
+        rig.meeting.state = .none
+        run(rig, seconds: 2)
+        XCTAssertEqual(rig.coordinator.state, .due)
+        XCTAssertFalse(rig.presenter.presentations.contains {
+            if case .aggressive = $0 { return true }
+            return false
+        })
+        XCTAssertEqual(rig.presenter.last, ReminderPresentation.none)
+    }
+
+    func testMenuBarSecondsCanBeHidden() {
+        let rig = makeRig()
+        XCTAssertEqual(rig.coordinator.menuBarLabel().text, "30:00")
+
+        rig.coordinator.settings.showSecondsInMenuBar = false
+        XCTAssertEqual(rig.coordinator.menuBarLabel().text, "30m")
+
+        run(rig, seconds: 61)
+        XCTAssertEqual(rig.coordinator.menuBarLabel().text, "29m")
+    }
+
+    func testSettingsChangesNotifyPersistenceHook() {
+        let rig = makeRig()
+        var persisted: AppSettings?
+        rig.coordinator.onSettingsChange = { persisted = $0 }
+
+        rig.coordinator.settings.snoozeDuration = 15 * 60
+        XCTAssertEqual(persisted?.snoozeDuration, 15 * 60)
+    }
 }

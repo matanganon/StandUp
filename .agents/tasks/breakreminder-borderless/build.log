@@ -1,0 +1,14 @@
+# Release build evidence — breakreminder-borderless
+
+Command:
+  cd /Users/matanrephaelganon/Documents/timer/StandUp && xcodebuild -project StandUp.xcodeproj -scheme StandUp -configuration Release build CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+
+Date: Thu Oct  8 00:59:19 IDT 2026
+
+Result tail:
+PruneExplicitPrecompiledModules /Users/matanrephaelganon/Library/Developer/Xcode/DerivedData/StandUp-czsxzyqcmnrzibedgpigjjxpuvsf/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /Users/matanrephaelganon/Library/Developer/Xcode/DerivedData/SDKExplicitPrecompiledModules
+
+** BUILD SUCCEEDED **
+

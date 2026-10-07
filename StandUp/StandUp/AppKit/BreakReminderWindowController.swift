@@ -26,15 +26,27 @@ final class BreakReminderWindowController {
 
     private var actions: Actions?
     private var workMinutes: Int = 30
+    private var breakMinutes: Int = 2
+    private var snoozeMinutes: Int = 5
     private var canSnooze: Bool = true
 
     /// Show (or update) the full-screen overlay on the active display.
-    func show(workMinutes: Int, canSnooze: Bool, actions: Actions) {
+    func show(
+        workMinutes: Int,
+        breakMinutes: Int,
+        snoozeMinutes: Int,
+        canSnooze: Bool,
+        isPreview: Bool,
+        actions: Actions
+    ) {
         self.actions = actions
         self.workMinutes = workMinutes
+        self.breakMinutes = breakMinutes
+        self.snoozeMinutes = snoozeMinutes
         self.canSnooze = canSnooze
-
-        let screenFrame = ScreenPlacement.activeScreenFrame()
+        let screenFrame = isPreview
+            ? ScreenPlacement.activeScreenVisibleFrame()
+            : ScreenPlacement.activeScreenFrame()
 
         if panel == nil {
             let p = FloatingPanel(contentRect: screenFrame, nonActivating: true)
@@ -42,9 +54,25 @@ final class BreakReminderWindowController {
             p.ignoresMouseEvents = false
             // Shadow off for a full-screen overlay.
             p.hasShadow = false
-            p.contentView = NSHostingView(rootView: makeRoot())
+            let hostingView = NSHostingView(rootView: makeRoot())
+            hostingView.frame = NSRect(origin: .zero, size: screenFrame.size)
+            hostingView.autoresizingMask = [.width, .height]
+            p.contentView = hostingView
             self.panel = p
+            p.setFrame(screenFrame, display: true)
             p.orderFrontRegardless()
+
+            #if DEBUG
+            if ProcessInfo.processInfo.environment["STANDUP_CAPTURE_PREVIEW"] == "1" {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    let bounds = hostingView.bounds
+                    guard let bitmap = hostingView.bitmapImageRepForCachingDisplay(in: bounds) else { return }
+                    hostingView.cacheDisplay(in: bounds, to: bitmap)
+                    guard let png = bitmap.representation(using: .png, properties: [:]) else { return }
+                    try? png.write(to: URL(fileURLWithPath: "/private/tmp/standup-live-preview.png"))
+                }
+            }
+            #endif
         } else {
             updateContent()
             if let p = panel {
@@ -52,6 +80,7 @@ final class BreakReminderWindowController {
                 p.orderFrontRegardless()
             }
         }
+
     }
 
     /// Trigger a brief visual pulse (used on sound escalation).
@@ -79,6 +108,8 @@ final class BreakReminderWindowController {
     private func makeRoot() -> BreakReminderView {
         BreakReminderView(
             workMinutes: workMinutes,
+            breakMinutes: breakMinutes,
+            snoozeMinutes: snoozeMinutes,
             canSnooze: canSnooze,
             onStartBreak: { [weak self] in self?.actions?.startBreak() },
             onSnooze: { [weak self] in self?.actions?.snooze() },

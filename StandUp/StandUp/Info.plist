@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleName</key>
-	<string>StandUp</string>
+	<string>$(APP_DISPLAY_NAME)</string>
 	<key>CFBundleDisplayName</key>
-	<string>StandUp</string>
+	<string>$(APP_DISPLAY_NAME)</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleShortVersionString</key>

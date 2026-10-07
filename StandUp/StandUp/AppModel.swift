@@ -87,11 +87,21 @@ final class AppModel {
         syncPresenterContext()
 
         start()
+
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["STANDUP_PREVIEW_ON_LAUNCH"] == "1" {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                presenter.showPreview()
+            }
+        }
+        #endif
     }
 
     /// Keep presenter display context in sync with current settings/state.
     private func syncPresenterContext() {
-        presenter.workMinutes = Int(coordinator.settings.workInterval / 60)
+        presenter.workMinutes = max(1, Int(ceil(coordinator.settings.workInterval / 60)))
+        presenter.breakMinutes = max(1, Int(ceil(coordinator.settings.breakDuration / 60)))
+        presenter.snoozeMinutes = max(1, Int(ceil(coordinator.settings.snoozeDuration / 60)))
         presenter.canSnooze = coordinator.canSnooze
     }
 

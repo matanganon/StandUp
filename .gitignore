@@ -3,6 +3,7 @@
 
 # Xcode
 build/
+.build-ui/
 DerivedData/
 *.xcuserstate
 *.xcscmblueprint

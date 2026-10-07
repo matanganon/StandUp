@@ -77,6 +77,9 @@ public final class BreakCoordinator {
     private var lastQuietReminderAt: Date?
     /// Whether we have presented the current aggressive/quiet surface already.
     private var presentedState: BreakState?
+    /// Tracks whether this overdue break was ever deferred by a real meeting.
+    /// Used to honor the user's post-meeting reminder preference.
+    private var wasDeferredByMeeting = false
 
     public init(
         settings: AppSettings,
@@ -108,6 +111,7 @@ public final class BreakCoordinator {
         dueSince = nil
         idleAtDue = 0
         firedSoundIndices.removeAll()
+        wasDeferredByMeeting = false
         remainingWork = settings.workInterval
         setState(.working)
         updatePresentation(now: time.now())
@@ -254,6 +258,7 @@ public final class BreakCoordinator {
         firedSoundIndices.removeAll()
         quietRemindersShown = 0
         lastQuietReminderAt = nil
+        wasDeferredByMeeting = false
         remainingWork = 0
         evaluateDueState(now: now)
     }
@@ -300,6 +305,9 @@ public final class BreakCoordinator {
     private func evaluateDueState(now: Date) {
         let quieting = currentQuietReason(now: now)
         quietReason = quieting
+        if case .meeting = quieting {
+            wasDeferredByMeeting = true
+        }
         if quieting == .none {
             setState(.due)
         } else {
@@ -351,6 +359,10 @@ public final class BreakCoordinator {
     }
 
     private func presentAggressive(now: Date) {
+        if wasDeferredByMeeting && !settings.aggressiveReminderAfterMeeting {
+            presenter.present(.none)
+            return
+        }
         guard let due = dueSince else {
             presenter.present(.aggressive(soundAlertIndex: nil))
             return
@@ -454,15 +466,15 @@ public final class BreakCoordinator {
     public func menuBarLabel() -> MenuBarLabel {
         switch state {
         case .working:
-            let t = formatMMSS(remainingWork)
+            let t = formatCountdown(remainingWork)
             return .init(kind: .working, text: t,
                          accessibilityDescription: "Next break in \(spoken(remainingWork))")
         case .warning:
-            let t = formatMMSS(remainingWork)
+            let t = formatCountdown(remainingWork)
             return .init(kind: .warning, text: t,
                          accessibilityDescription: "Break soon, \(spoken(remainingWork)) remaining")
         case .snoozed(let until):
-            let t = formatMMSS(max(0, until.timeIntervalSince(time.now())))
+            let t = formatCountdown(max(0, until.timeIntervalSince(time.now())))
             return .init(kind: .working, text: t,
                          accessibilityDescription: "Snoozed, \(spoken(max(0, until.timeIntervalSince(time.now())))) remaining")
         case .due:
@@ -472,7 +484,7 @@ public final class BreakCoordinator {
             return .init(kind: .dueInMeeting, text: "Due",
                          accessibilityDescription: "Break due, deferred because you're in a call")
         case .breakInProgress:
-            let t = formatMMSS(remainingBreak)
+            let t = formatCountdown(remainingBreak)
             return .init(kind: .breakRunning, text: t,
                          accessibilityDescription: "Break in progress, \(spoken(remainingBreak)) remaining")
         case .paused:
@@ -484,6 +496,12 @@ public final class BreakCoordinator {
     private func formatMMSS(_ seconds: TimeInterval) -> String {
         let s = Int(seconds.rounded())
         return String(format: "%02d:%02d", s / 60, s % 60)
+    }
+
+    private func formatCountdown(_ seconds: TimeInterval) -> String {
+        guard !settings.showSecondsInMenuBar else { return formatMMSS(seconds) }
+        let minutes = max(0, Int(ceil(seconds / 60)))
+        return "\(minutes)m"
     }
 
     private func spoken(_ seconds: TimeInterval) -> String {
