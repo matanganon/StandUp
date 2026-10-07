@@ -91,6 +91,7 @@ jobs:
         env:
           SIGN_IDENTITY: ${{ secrets.MACOS_SIGN_IDENTITY }}
           NOTARY_PROFILE: ${{ steps.notary.outputs.profile }}
+          BUILD_NUMBER: ${{ github.run_number }}
         run: |
           chmod +x scripts/build_release.sh
           scripts/build_release.sh "${{ steps.ver.outputs.version }}"

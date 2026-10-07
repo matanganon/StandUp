@@ -40,6 +40,7 @@ if [[ -z "$VERSION" ]]; then
     | awk -F' = ' '/ MARKETING_VERSION / {print $2; exit}')"
   VERSION="${VERSION:-0.0.0}"
 fi
+BUILD_NUMBER="${BUILD_NUMBER:-$VERSION}"
 echo "==> Building StandUp version $VERSION"
 
 # --- Clean build directories -------------------------------------------------
@@ -58,6 +59,8 @@ xcodebuild \
   CODE_SIGN_IDENTITY="-" \
   CODE_SIGNING_REQUIRED=NO \
   CODE_SIGNING_ALLOWED=NO \
+  MARKETING_VERSION="$VERSION" \
+  CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
   clean build \
   | grep -E "error:|warning:|BUILD SUCCEEDED|BUILD FAILED" | grep -v "appintents" || true
 
@@ -67,6 +70,17 @@ if [[ ! -d "$APP_PATH" ]]; then
   exit 1
 fi
 echo "==> Built: $APP_PATH"
+
+# Refuse to publish an archive whose app metadata does not match the release.
+# Homebrew tracks the cask version, while Finder/About reads these bundle keys;
+# both must describe the same build.
+BUILT_VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_PATH/Contents/Info.plist")"
+BUILT_NUMBER="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$APP_PATH/Contents/Info.plist")"
+if [[ "$BUILT_VERSION" != "$VERSION" || "$BUILT_NUMBER" != "$BUILD_NUMBER" ]]; then
+  echo "ERROR: built app reports version $BUILT_VERSION ($BUILT_NUMBER), expected $VERSION ($BUILD_NUMBER)." >&2
+  exit 1
+fi
+echo "==> Verified app metadata: $BUILT_VERSION ($BUILT_NUMBER)"
 
 # --- Stage the .app ----------------------------------------------------------
 STAGE="$BUILD_DIR/stage"

@@ -1,13 +1,13 @@
 # Homebrew Cask for StandUp.
 #
-# This file is the canonical template. Copy it to your tap repository at:
+# This file is a bootstrap/template copy. Homebrew reads the live cask from:
 #   homebrew-standup/Casks/standup.rb
 #
 # The release tooling (scripts/release.sh + scripts/update_cask.sh) keeps the
 # `version` and `sha256` fields in sync automatically after each release.
 cask "standup" do
-  version "1.0.1"
-  sha256 "c913029e7df13bdfbd1861732738079b74161b364dfd9ed7e7df8b4a66ee6f06"
+  version "1.0.2"
+  sha256 "76de95d73c98dd2a3fea7a83295119a7d1493385d4c68f0ae38e65d72d04a573"
 
   url "https://github.com/matanganon/StandUp/releases/download/v#{version}/StandUp-#{version}.zip"
   name "StandUp"

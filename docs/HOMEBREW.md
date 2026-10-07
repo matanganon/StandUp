@@ -46,12 +46,23 @@ git tag -a v1.0.0 -m "StandUp 1.0.0"
 git push origin v1.0.0
 ```
 
-After the workflow finishes, grab the SHA-256 from the release notes (or the Actions log) and update the tap:
+When the `HOMEBREW_TAP_TOKEN` repository secret is configured, the workflow also
+updates `matanganon/homebrew-standup` automatically. The token needs read/write
+access to that repository's contents. Without the secret, the release is still
+published but the tap update is skipped.
+
+To verify the published cask:
 
 ```bash
-# From the StandUp project root, with dist/ populated — or just edit the cask by hand:
-#   version "1.0.0"
-#   sha256  "<sha from the release>"
+gh api repos/matanganon/homebrew-standup/contents/Casks/standup.rb \
+  --jq .content | base64 --decode
+```
+
+Users with an existing tap/install then update with:
+
+```bash
+brew update
+brew upgrade --cask standup
 ```
 
 ### Option B — Local, one command

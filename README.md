@@ -62,6 +62,17 @@ brew install --cask standup
 
 This places `StandUp.app` in `/Applications`. Launch it from there or Spotlight.
 
+To install a newly published version over an existing installation, first refresh
+the tap and then upgrade the cask:
+
+```bash
+brew update
+brew upgrade --cask standup
+```
+
+`brew install` is intended for the initial installation; it does not replace the
+explicit upgrade step for an app that is already installed.
+
 ### Manual install
 
 1. Download the latest `StandUp-x.x.x.zip` from [GitHub Releases](https://github.com/matanganon/StandUp/releases).
